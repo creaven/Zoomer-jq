@@ -20,7 +20,7 @@ var Zoomer = function(element, options){
 
 Zoomer.prototype = {
 	
-	version: '1.8',
+	version: '1.8.1',
 
 	initialize: function(element, options){
 		var dflt = {
@@ -37,7 +37,9 @@ Zoomer.prototype = {
 			this.prepareSmall();
 		}
 		var src = this.options.big || this.small.attr('big');
-		this.big = $('<img src="' + src + '"></img>').css({
+		var img = new Image();
+		img.src = src;
+		this.big = $(img).css({
 			position: 'absolute',
 			top: 0,
 			left: 0,
@@ -56,8 +58,19 @@ Zoomer.prototype = {
 		this.small.wrap('<div class="zoomer-wrapper"></div>');
 		this.wrapper = this.small.parent();
 		var self = this;
+		function getComputedStyle(element, property){
+			if (element.currentStyle) return element.currentStyle[property];
+			var computed = document.defaultView.getComputedStyle(element, null);
+			return (computed) ? computed.getPropertyValue(property) : null;
+		};
 		$.each(['margin', 'left', 'top', 'bottom', 'right', 'float', 'clear', 'border', 'padding'], function(i, p){
-			var style = self.small.css(p);
+			var style;
+			if($.inArray(p, ['left', 'top', 'bottom', 'right']) != -1){
+				style = getComputedStyle(self.small[0], p);
+			}else{
+				style = self.small.css(p);
+			}
+			if(p == 'margin' && style == 'auto') return;
 			var dflt = 'auto';
 			if($.inArray(p, ['float', 'clear', 'border']) != -1) dflt = 'none';
 			if(p == 'padding') dflt = '0';
@@ -102,8 +115,8 @@ Zoomer.prototype = {
 		this.bigWrapper.css({
 			position: 'absolute',
 			overflow: 'hidden',
-			top: this.small.offset().top - this.wrapper.offset().top - parseInt(this.wrapper.css('border-top-width'), 10),
-			left: this.small.offset().left - this.wrapper.offset().left - parseInt(this.wrapper.css('border-left-width'), 10),
+			top: this.small.offset().top - this.wrapper.offset().top - parseInt(this.wrapper.css('border-top-width'), 10) || 0,
+			left: this.small.offset().left - this.wrapper.offset().left - parseInt(this.wrapper.css('border-left-width'), 10) || 0,
 			width: this.small[0].offsetWidth,
 			height: this.small[0].offsetHeight,
 			background: 'url(_)'

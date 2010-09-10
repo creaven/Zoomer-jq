@@ -20,7 +20,7 @@ var Zoomer = function(element, options){
 
 Zoomer.prototype = {
 	
-	version: '1.8.1',
+	version: '1.8.2',
 
 	initialize: function(element, options){
 		var dflt = {
@@ -119,7 +119,7 @@ Zoomer.prototype = {
 			left: this.small.offset().left - this.wrapper.offset().left - parseInt(this.wrapper.css('border-left-width'), 10) || 0,
 			width: this.small[0].offsetWidth,
 			height: this.small[0].offsetHeight,
-			background: 'url(_)'
+			background: 'url("' + this.small.attr('src') + '")'
 		}).mouseenter($.proxy(this.startZoom, this))
 		.mouseleave($.proxy(this.stopZoom, this))
 		.mousemove($.proxy(this.move, this));

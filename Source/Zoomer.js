@@ -119,7 +119,8 @@ Zoomer.prototype = {
 			left: this.small.offset().left - this.wrapper.offset().left - parseInt(this.wrapper.css('border-left-width'), 10) || 0,
 			width: this.small[0].offsetWidth,
 			height: this.small[0].offsetHeight,
-			background: 'url("' + this.small.attr('src') + '")'
+			background: 'url("' + this.small.attr('src') + '")',
+			zIndex: (parseInt(this.small.css('zIndex')) || 0) + 1
 		}).mouseenter($.proxy(this.startZoom, this))
 		.mouseleave($.proxy(this.stopZoom, this))
 		.mousemove($.proxy(this.move, this));
